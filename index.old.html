@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <mensaje-componente v-bind:mensaje="mensajeDelRoot"></mensaje-componente>
+    </div>
+    <script>
+        const {createApp, defineComponent, ref, computed} = Vue;
+
+        const mensajeComponent = defineComponent((props) => {
+            const mensajeDelHijo = ref("Hola Mundo del Hijo")
+            const mensajeDelPadre = computed(() => `${props.mensaje.toUpperCase()} <- Mensaje props modificado`)
+            return {
+                mensajeDelHijo,
+                mensajeDelPadre
+            }
+        }, {
+            props: ["mensaje"],
+            template: `<p>Mensaje del Padre: {{mensaje}}</p>
+            <p>{{mensajeDelPadre}}</p>
+            <p>Mensaje del hijo: {{mensajeDelHijo}}</p>`
+        })
+
+        const app = createApp({
+            setup(){
+                const mensajeDelRoot = ref("Hola Perú")
+                const mensajeNoReactivo = "Hola Lima, Perú"
+                return {
+                    mensajeDelRoot,
+                    mensajeNoReactivo
+                }
+            }
+        })
+
+        app.component("mensaje-componente", mensajeComponent);
+        app.mount("#app")
+
+    </script>
+</body>
+</html>
